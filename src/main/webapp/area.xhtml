@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+>
+    <h:head>
+        <title>Основная страница</title>
+        <h:outputStylesheet library="css" name="style.css" />
+    </h:head>
+    <h:body>
+        <header>
+            <h1>Лабораторная №3</h1>
+            <span>
+                Толмачёв Игорь Дмитриевич P3212
+                <br />
+                471450
+            </span>
+        </header>
+
+        <main>
+            <div class="main-area">
+                <div class="canvas-container">
+                    <canvas id="canvas"></canvas>
+                </div>
+                <h:form styleClass="form-container">
+                    <div class="field">
+                        <p:outputLabel for="x-field" value="Координата X" />
+                        <p:spinner
+                            id="x-field"
+                            value="#{area.x}"
+                            min="-5"
+                            max="5"
+                            stepFactor="1"
+                            widgetVar="vx"
+                        />
+                    </div>
+                    <div class="field">
+                        <p:outputLabel for="y-field" value="Координата Y" />
+                        <p:inputNumber
+                            id="y-field"
+                            value="#{area.y}"
+                            minValue="-5"
+                            maxValue="5"
+                            decimalPlaces="2"
+                            widgetVar="vy"
+                        />
+                    </div>
+                    <div class="field">
+                        <p:outputLabel value="Радиус" />
+                        <div id="r-field" class="radio-container">
+                            <p:selectBooleanCheckbox
+                                id="r1"
+                                value="#{area.r10}"
+                                itemLabel="1"
+                                widgetVar="vr1"
+                                onchange="keepOneR('vr1')"
+                            />
+                            <p:selectBooleanCheckbox
+                                id="r15"
+                                value="#{area.r15}"
+                                itemLabel="1.5"
+                                widgetVar="vr15"
+                                onchange="keepOneR('vr15')"
+                            />
+                            <p:selectBooleanCheckbox
+                                id="r2"
+                                value="#{area.r20}"
+                                itemLabel="2"
+                                widgetVar="vr2"
+                                onchange="keepOneR('vr2')"
+                            />
+                            <p:selectBooleanCheckbox
+                                id="r25"
+                                value="#{area.r25}"
+                                itemLabel="2.5"
+                                widgetVar="vr25"
+                                onchange="keepOneR('vr25')"
+                            />
+                            <p:selectBooleanCheckbox
+                                id="r3"
+                                value="#{area.r30}"
+                                itemLabel="3"
+                                widgetVar="vr3"
+                                onchange="keepOneR('vr3')"
+                            />
+                        </div>
+                    </div>
+
+                    <p:commandButton
+                        id="send-button"
+                        value="Проверить точку"
+                        action="#{area.checkPoint}"
+                        update="results"
+                    />
+                </h:form>
+            </div>
+
+            <h:panelGroup id="results" styleClass="result-table-area">
+                <table id="result-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>X</th>
+                            <th>Y</th>
+                            <th>Радиус</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ui:repeat value="#{area.results}" var="result">
+                            <tr>
+                                <td id="id">#{result.id}</td>
+                                <td id="x">#{result.x}</td>
+                                <td id="y">#{result.y}</td>
+                                <td id="r">#{result.r}</td>
+                                <td id="hit">#{result.hit}</td>
+                            </tr>
+                        </ui:repeat>
+                    </tbody>
+                </table>
+            </h:panelGroup>
+        </main>
+
+        <h:outputScript library="js" name="area.js" target="body" />
+    </h:body>
+</html>

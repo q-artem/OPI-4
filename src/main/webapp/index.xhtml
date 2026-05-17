@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <title>Стартовая страница</title>
+    <h:outputStylesheet library="css" name="style.css" />
+</h:head>
+<h:body>
+    <header>
+        <h1>Лабораторная №3</h1>
+        <span>
+            Толмачёв Игорь Дмитриевич P3212
+            <br />
+            471450
+        </span>
+    </header>
+
+    <main>
+        <span id="time">...</span>
+        <span id="date">...</span>
+
+        <h:button value="Перейти на основную страницу приложения" outcome="area" />
+    </main>
+
+    <h:outputScript library="js" name="clock.js" target="body" />
+</h:body>
+</html>

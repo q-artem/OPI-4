@@ -1,0 +1,29 @@
+services:
+  server:
+    build: "."
+    restart: "on-failure"
+
+    environment:
+      - DATABASE_URL=jdbc:postgresql://database:5432/lab3
+      - DATABASE_USER=lab3user
+      - DATABASE_PASSWORD=b62b0c50929949c3e6e1fb65f6a63e58a2cc374e8965e201bee53d93fb758b5a
+
+    ports:
+      - 8888:8080
+
+  db:
+    image: "postgres"
+    restart: "on-failure"
+    hostname: "database"
+
+    volumes:
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      - database:/var/lib/postgresql
+
+    environment:
+      - POSTGRES_DB=lab3
+      - POSTGRES_USER=lab3user
+      - POSTGRES_PASSWORD=b62b0c50929949c3e6e1fb65f6a63e58a2cc374e8965e201bee53d93fb758b5a
+
+volumes:
+  database:

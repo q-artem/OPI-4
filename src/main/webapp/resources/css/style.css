@@ -1,0 +1,272 @@
+@import "#{resource['css:color.css']}";
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+    transition-duration: 0.2s;
+    transition-property: background, color, border-color;
+    transition-timing-function: ease-in-out;
+}
+
+body {
+    font-family: "Noto Sans", sans-serif;
+
+    background-color: var(--color-surface-container);
+    color: var(--color-on-surface);
+
+    margin: 0 auto;
+    max-width: 55rem;
+
+    padding: 0.5rem;
+}
+
+header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    margin: 1rem 0.5rem;
+}
+
+header > * {
+    flex: 0 0 auto;
+    margin: 0;
+}
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 1rem;
+
+    background-color: var(--color-surface);
+    border-radius: 2rem;
+    padding: 1rem;
+}
+
+#time {
+    width: 100%;
+    text-align: center;
+    font-size: 7rem;
+}
+
+#date {
+    width: 100%;
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 5rem;
+}
+
+.main-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.main-area > .canvas-container {
+    flex: 1;
+}
+
+.main-area > .form-container {
+    flex: 2;
+}
+
+.canvas-container {
+    display: flex;
+    justify-content: center;
+}
+
+@media (width <= 30rem) {
+    #canvas {
+        width: 17rem;
+        height: 17rem;
+    }
+}
+
+@media (width > 30rem) {
+    #canvas {
+        width: 25rem;
+        height: 25rem;
+    }
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-container > .field {
+    flex: 0 0 auto;
+
+    border: var(--color-outline) solid 0.15rem;
+    border-radius: 1rem;
+    padding: 0.5rem;
+}
+
+.field > label {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.field > span {
+    width: 100%;
+}
+
+body .field .ui-inputfield {
+    width: 100%;
+    outline: none;
+    box-shadow: none;
+
+    background-color: transparent;
+    border: var(--color-outline) solid 0.15em;
+    border-radius: 0.5rem;
+    color: var(--color-on-surface);
+}
+
+.field .ui-inputfield:hover {
+    border-color: var(--color-outline);
+}
+
+.field .ui-inputfield:focus {
+    border-color: var(--color-primary);
+}
+
+.field .ui-spinner-button {
+    background-color: var(--color-outline);
+    border-color: var(--color-outline);
+    color: var(--color-on-surface);
+}
+
+.field .ui-spinner-button:hover {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+body .field .ui-chkbox-box {
+    outline: none !important;
+    box-shadow: none !important;
+
+    background-color: var(--color-surface);
+    border-color: var(--color-outline);
+    color: var(--color-on-surface);
+}
+
+body .field .ui-chkbox-box.ui-state-active {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+body .field .ui-chkbox-box.ui-state-hover {
+    border-color: var(--color-primary);
+}
+
+body .field .ui-chkbox-box.ui-state-active.ui-state-hover {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+.field > .radio-container {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-evenly;
+
+    margin: 0.5rem 0;
+}
+
+.field > .radio-container > div {
+    white-space: nowrap;
+}
+
+.field > .radio-container > div > label {
+    flex: 0 0 auto;
+}
+
+.field > .radio-container > div > input[type="radio"] {
+    appearance: none;
+
+    width: 1rem;
+    height: 1rem;
+
+    border: 0.15rem solid var(--color-on-surface-variant);
+    border-radius: 50%;
+
+    transition: 0.1s all ease-in-out;
+    margin-right: 5px;
+
+    vertical-align: top;
+}
+
+.field > .radio-container > div > input[type="radio"]:checked {
+    border: 0.3rem solid var(--color-primary);
+}
+
+button[type="submit"].ui-button,
+input[type="button"] {
+    outline: none !important;
+    box-shadow: none !important;
+
+    background-color: transparent;
+    border: var(--color-outline) solid 0.15em;
+    border-radius: 1rem;
+    color: var(--color-on-surface);
+
+    padding: 0.8rem;
+}
+
+button[type="submit"].ui-button:hover,
+input[type="button"]:hover {
+    border: var(--color-primary) solid 0.15em;
+    background-color: transparent;
+}
+
+button[type="submit"].ui-button:active,
+input[type="button"]:active {
+    outline: none;
+    box-shadow: none;
+
+    color: var(--color-on-primary);
+    background-color: var(--color-primary);
+}
+
+button[type="submit"].ui-button > .ui-button-text {
+    padding: 0;
+}
+
+.result-table-area {
+    border: 0.1rem solid var(--color-tertiary);
+    border-radius: 1rem;
+
+    max-height: 15rem;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+
+#result-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#result-table > thead > tr > th {
+    background-color: var(--color-tertiary);
+    color: var(--color-on-tertiary);
+    position: sticky;
+    top: 0;
+}
+
+#result-table > tbody > tr > td {
+    &:first-child {
+        border: none;
+    }
+
+    &:last-child {
+        border: none;
+    }
+
+    border-left: 0.1rem solid var(--color-tertiary);
+    border-right: 0.1rem solid var(--color-tertiary);
+
+    padding: 0.5rem;
+}
