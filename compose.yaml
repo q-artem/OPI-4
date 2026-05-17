@@ -7,9 +7,11 @@ services:
       - DATABASE_URL=jdbc:postgresql://database:5432/lab3
       - DATABASE_USER=lab3user
       - DATABASE_PASSWORD=b62b0c50929949c3e6e1fb65f6a63e58a2cc374e8965e201bee53d93fb758b5a
+      - JAVA_OPTS=-Djboss.bind.address=0.0.0.0 -Djboss.bind.address.management=0.0.0.0
 
     ports:
       - 8888:8080
+      - 9990:9990
 
   db:
     image: "postgres"
