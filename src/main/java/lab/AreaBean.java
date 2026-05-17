@@ -4,13 +4,15 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
+import lab.mbean.MBeanRegistry;
 
 @SuppressWarnings("deprecation")
-@RequestScoped
+@SessionScoped
 @ManagedBean(name = "area")
 public class AreaBean implements Serializable {
     public ResultManager resultManager;
+    private List<Result> resultsCache;
 
     public int x = 1;
     public double y = 1;
@@ -23,10 +25,14 @@ public class AreaBean implements Serializable {
 
     public AreaBean() {
         this.resultManager = new ResultManager();
+        this.resultsCache = resultManager.getResults();
     }
     
     AreaBean(ResultManager resultManager) {
         this.resultManager = resultManager;
+        if (resultManager != null) {
+            this.resultsCache = resultManager.getResults();
+        }
     }
 
     public boolean checkHit(double r) {
@@ -36,7 +42,17 @@ public class AreaBean implements Serializable {
     }
 
     private void processResult(double r) {
-        resultManager.insertResult(x, y, r, checkHit(r));
+        boolean hit = checkHit(r);
+        Result result = resultManager.insertResult(x, y, r, hit);
+        if (resultsCache != null) {
+            resultsCache.add(0, result);
+        }
+        MBeanRegistry.getPointsCounter().addPoint(hit);
+    }
+
+    public void checkCanvasClick() {
+        MBeanRegistry.getClickInterval().recordClick();
+        checkPoint();
     }
 
     public void checkPoint() {
@@ -53,7 +69,10 @@ public class AreaBean implements Serializable {
     }
 
     public List<Result> getResults() {
-        return resultManager.getResults();
+        if (resultsCache == null) {
+            resultsCache = resultManager.getResults();
+        }
+        return resultsCache;
     }
 
     public int getX() {

@@ -295,5 +295,5 @@ window
 addCanvasClickListener((x, y) => {
   setX(x)
   setY(y)
-  drawCanvas(getR(), [getX(), getY()], getPoints())
+  checkPointCommand()
 })

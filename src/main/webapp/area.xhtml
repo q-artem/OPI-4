@@ -94,6 +94,13 @@
                         value="Проверить точку"
                         action="#{area.checkPoint}"
                         update="results"
+                        oncomplete="drawCanvas(getR(), [getX(), getY()], getPoints())"
+                    />
+                    <p:remoteCommand
+                        name="checkPointCommand"
+                        action="#{area.checkCanvasClick}"
+                        update="results"
+                        oncomplete="drawCanvas(getR(), [getX(), getY()], getPoints())"
                     />
                 </h:form>
             </div>

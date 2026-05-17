@@ -15,27 +15,26 @@ public class ResultManager {
     private static final String USER = System.getenv().getOrDefault("DATABASE_USER", "s467731");
     private static final String PASSWORD = System.getenv().getOrDefault("DATABASE_PASSWORD", "ytsQfxwJ8XS0zLjM");
 
-    private final Connection connection;
+    private Connection connection;
 
     public ResultManager() {
+        initConnection();
+    }
+
+    private void initConnection() {
         try {
+            Class.forName("org.postgresql.Driver");
             this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException | ClassNotFoundException e) {
+            System.err.println("Failed to connect to database: " + e.getMessage());
         }
     }
 
-    private ResultSet execute(String query) throws SQLException {
-        PreparedStatement statement = this.connection.prepareStatement(query);
-        return statement.executeQuery();
-    }
-
-    private ResultSet execute(String query, Object... args) throws SQLException {
-        PreparedStatement statement = this.connection.prepareStatement(query);
-        for (int i = 0; i < args.length; i++) {
-            statement.setObject(i + 1, args[i]);
+    private Connection getConnection() throws SQLException {
+        if (connection == null || connection.isClosed()) {
+            initConnection();
         }
-        return statement.executeQuery();
+        return connection;
     }
 
     private Result parseRow(ResultSet resultSet) throws SQLException {
@@ -48,32 +47,37 @@ public class ResultManager {
     }
 
     public List<Result> getResults() {
-        try {
+        String sql = "SELECT * FROM results ORDER BY id DESC";
+        try (PreparedStatement statement = getConnection().prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+            
             List<Result> results = new ArrayList<>();
-
-            ResultSet resultSet = this.execute("SELECT * FROM results ORDER BY id DESC");
             while (resultSet.next()) {
                 results.add(parseRow(resultSet));
             }
-
             return results;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.err.println("Error getting results: " + e.getMessage());
+            return new ArrayList<>();
         }
     }
 
     public Result insertResult(int x, double y, double r, boolean hit) {
-        try {
-            String sql = "INSERT INTO results(x, y, r, hit) VALUES (?, ?, ?, ?) RETURNING *";
-            ResultSet resultSet = this.execute(sql, x, y, r, hit);
-
-            if (!resultSet.next()) {
-                throw new RuntimeException("INSERT INTO must return value");
+        String sql = "INSERT INTO results(x, y, r, hit) VALUES (?, ?, ?, ?) RETURNING *";
+        try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
+            statement.setInt(1, x);
+            statement.setDouble(2, y);
+            statement.setDouble(3, r);
+            statement.setBoolean(4, hit);
+            
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (!resultSet.next()) {
+                    throw new RuntimeException("INSERT INTO must return value");
+                }
+                return parseRow(resultSet);
             }
-
-            return parseRow(resultSet);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error inserting result: " + e.getMessage(), e);
         }
     }
 }
