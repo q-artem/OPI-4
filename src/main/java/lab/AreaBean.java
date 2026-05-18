@@ -68,11 +68,13 @@ public class AreaBean implements Serializable {
             processResult(3.0);
     }
 
+    private static final int DISPLAY_LIMIT = 10;
+
     public List<Result> getResults() {
         if (resultsCache == null) {
             resultsCache = resultManager.getResults();
         }
-        return resultsCache;
+        return resultsCache.subList(0, Math.min(DISPLAY_LIMIT, resultsCache.size()));
     }
 
     public int getX() {

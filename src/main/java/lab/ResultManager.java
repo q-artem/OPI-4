@@ -16,6 +16,7 @@ public class ResultManager {
     private static final String PASSWORD = System.getenv().getOrDefault("DATABASE_PASSWORD", "ytsQfxwJ8XS0zLjM");
 
     private Connection connection;
+    private PreparedStatement insertStatement;
 
     public ResultManager() {
         initConnection();
@@ -25,6 +26,7 @@ public class ResultManager {
         try {
             Class.forName("org.postgresql.Driver");
             this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            this.insertStatement = null;
         } catch (SQLException | ClassNotFoundException e) {
             System.err.println("Failed to connect to database: " + e.getMessage());
         }
@@ -35,6 +37,15 @@ public class ResultManager {
             initConnection();
         }
         return connection;
+    }
+
+    private PreparedStatement getInsertStatement() throws SQLException {
+        if (insertStatement == null || insertStatement.isClosed()) {
+            insertStatement = getConnection().prepareStatement(
+                "INSERT INTO results(x, y, r, hit) VALUES (?, ?, ?, ?) RETURNING id"
+            );
+        }
+        return insertStatement;
     }
 
     private Result parseRow(ResultSet resultSet) throws SQLException {
@@ -63,18 +74,19 @@ public class ResultManager {
     }
 
     public Result insertResult(int x, double y, double r, boolean hit) {
-        String sql = "INSERT INTO results(x, y, r, hit) VALUES (?, ?, ?, ?) RETURNING *";
-        try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
+        try {
+            PreparedStatement statement = getInsertStatement();
             statement.setInt(1, x);
             statement.setDouble(2, y);
             statement.setDouble(3, r);
             statement.setBoolean(4, hit);
-            
+
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (!resultSet.next()) {
                     throw new RuntimeException("INSERT INTO must return value");
                 }
-                return parseRow(resultSet);
+                int id = resultSet.getInt("id");
+                return new Result(id, x, y, r, hit);
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error inserting result: " + e.getMessage(), e);
